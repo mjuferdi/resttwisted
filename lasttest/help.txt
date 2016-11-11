@@ -1,0 +1,29 @@
+============================================= 
+Usage: python.py [--command + func] *[-option]
+Command and Option Description:
+-g,--get func	   : HTTP GET request. List of functions[func]:
+  ping,*id         : Check server connection.
+  task,id          : Show task status.
+  search,*object   : Search object from database.
+  status,object    : Show status from object.           
+-p,--put func	   : HTTP PUT request. List of functions[func]: 
+  object,state	   : Update status from Hardware in a database.
+  search,object,state : Search object and at the same time update the status.  
+-n num             : Request amount for the given number [int].
+-d delay           : Suspends execution for the given number of second [float].
+-T threads         : Numbers of threads.
+-c on		   : View chart.
+-h,--help          : Show this help message and exit.
+
+
+*conditionally required
+============================================= 
+Examples: 
+  main.py -g ping 
+  main.py -g task,2
+  main.py -p DRES-121301-00,on
+  main.py --get search
+  main.py --put search,FlurMelder2,on
+  main.py --get status,Galerie -n 10 -c on
+  main.py --put FlurMelder1,off -n 100 -d 5  
+  main.py --get ping,1 -n 1000 -d 5 -T 3 -c on
