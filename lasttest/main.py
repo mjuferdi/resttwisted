@@ -25,6 +25,7 @@ def main():
                 if len(arg) > 1:
                     i = arg.split(',')
                 pro.arg = i
+                pro.opt = opt
                 pro.getMethod()
             elif opt in ('-p', '--put'):
                 i = arg
@@ -33,6 +34,7 @@ def main():
                 else:
                     raise Exception
                 pro.arg = i
+                pro.opt = opt
                 pro.putMethod()
             elif opt in ('-n'):
                 pro.num = int(arg)
