@@ -34,6 +34,7 @@ class Processor():
         self.q = []
         self.plot = False
         self.ret = {'isThread':False}
+        self.cmd = {'onlyOpt' : True}
         
     def setPlot(self):
         """
@@ -46,6 +47,12 @@ class Processor():
         Called when argument Thread is given.
         """
         self.ret['isThread'] = True
+        
+    def setCommand(self):
+        """
+        Called once to check if command exist
+        """
+        self.cmd['onlyOpt'] = False
         
     def stopWorker(self, ignored):
         """
@@ -88,7 +95,8 @@ class Processor():
             else: raise Exception
         else:
             raise Exception
-         
+        self.setCommand()
+        
     def putMethod(self):
         """
         Manage user argument as parameter for PUT-method.
@@ -101,16 +109,20 @@ class Processor():
             self.state = self.arg[2]
         else:
             raise Exception
+        self.setCommand()
         
     def setup(self):
         """
         Called to set up, if there are multiple request running simultaneously.
         """
-        if self.ret['isThread'] is True:
-            for m in xrange(self.th):
+        if self.cmd['onlyOpt'] is False:
+            if self.ret['isThread'] is True:
+                for m in xrange(self.th):
+                    self.doWorker()
+            else:
                 self.doWorker()
         else:
-            self.doWorker()
+            raise Exception
             
     @defer.inlineCallbacks
     def worker(self):
