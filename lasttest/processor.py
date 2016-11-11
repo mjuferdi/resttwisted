@@ -21,6 +21,7 @@ class Processor():
         self.ch = Check()
         self.de = Detector()
         self.con = Config()
+        self.opt = ''
         self.arg = ''
         self.state = ''
         self.parId = None
@@ -128,7 +129,7 @@ class Processor():
             start = time.time()
             for n in xrange(self.num):
                 s = time.time()
-                if sys.argv[1] in ('-g', '--get'):
+                if self.opt in ('-g', '--get'):
                     if self.arg[0] == 'ping':
                         resp = yield self.ch.call(self.parId)
                     elif self.arg[0] == 'task':
@@ -137,7 +138,7 @@ class Processor():
                         resp = yield self.de.search(self.name)
                     elif self.arg[0] == 'status':
                         resp = yield self.de.review(self.name)
-                elif sys.argv[1] in ('-p','--put'):
+                elif self.opt in ('-p','--put'):
                     if self.arg[0] == 'search':
                         resp = yield self.de.searchUpdate(self.name, self.state)
                     else:
