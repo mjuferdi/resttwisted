@@ -1,0 +1,17 @@
+﻿2016-11-09 12:21:12,279 [DEBUG] -- Checking for Server status
+2016-11-09 12:21:12,299 [INFO] -- Status: 200 OK
+2016-11-09 12:21:12,301 [INFO] -- Response: Restservice ist einsatzbereit
+
+2016-11-09 12:22:10,086 [INFO] -- Status: 200 OK
+2016-11-09 12:22:10,088 [WARNING] -- Response: Not Found
+2016-11-09 12:22:10,088 [INFO] -- Es gibt keine Commandos fuer die partitionId 3
+
+2016-11-09 12:22:10,107 [INFO] -- Status: 200 OK
+2016-11-09 12:22:10,107 [WARNING] -- Response: Not Found
+2016-11-09 12:22:10,107 [INFO] -- Es gibt keine Commandos fuer die partitionId 3
+
+2016-11-09 12:22:10,107 [INFO] -- Status: 200 OK
+2016-11-09 12:22:10,108 [WARNING] -- Response: Not Found
+2016-11-09 12:22:10,108 [INFO] -- Es gibt keine Commandos fuer die partitionId 3
+
+
