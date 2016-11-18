@@ -23,7 +23,7 @@ class SubApp(object):
             elif '-' in _input: 
                 raise Exception
             else:
-                d = self.fun.Task(int(_input))
+                d = self.fun.task(int(_input))
                 d.addCallback(self.displayResponse)
         except:
             tkMessageBox.showwarning('Warning', 'Partition id nicht vorhanden')
@@ -31,7 +31,10 @@ class SubApp(object):
     def displayResponse(self, resp):
         """Display response in scrolltext"""
         self.stTask.delete(1.0, END)
-        self.stTask.insert(END, resp)
+        if resp is None:
+            self.stTask.insert(END, 'Server ist aus')
+        else:
+            self.stTask.insert(END, resp)
         self.stTask.config(state=DISABLED)
         
     def __init__(self, child):
