@@ -25,5 +25,3 @@ def getList():
         for item in json['object']:
             resp.append(item)
         defer.returnValue(resp)
-        
-    
