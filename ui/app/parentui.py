@@ -36,15 +36,18 @@ class App(object):
         lfLeft = LabelFrame(master, text='Object list')
         lfLeft.grid(row=0, column=0, columnspan=4, sticky=W+N+S,
                     padx=5, pady=5, ipadx=5, ipady=5)
+        
         #create label search
         lbSearch = Label(lfLeft, text='Enter object name to be searched:')
         lbSearch.grid(row=0, column=0, padx=5, pady=5, sticky=W)
+        
         #create combobox
         opt = ('Sort by:', 'Flexzone', 'Element type')
         self.cbSort = Combobox(lfLeft, values=opt, state='readonly')
         self.cbSort.current(0)
         self.cbSort.bind('<<ComboboxSelected>>', self.displayListObj)
         self.cbSort.grid(row=3, padx=5, sticky=W)
+       
         #create entrybox
         self.eSearch = Entry(lfLeft)
         self.eSearch.grid(row=0, column=1, padx=5, pady=2)
@@ -52,38 +55,49 @@ class App(object):
         #create button search
         self.btSearch = Button(lfLeft, text='Get List', command=self.getList)
         self.btSearch.grid(row=0, column=2, padx=5, pady=2)
+       
         #create scrollbar
         sb = Scrollbar(lfLeft)
         sb.grid(row=4, column=3, pady=5, sticky=N+S)
+        
         #create listbox
         self.lbList = Listbox(lfLeft, yscrollcommand=sb.set, height=20)
         self.lbList.grid(row=4, columnspan=3, padx=5, pady=5, sticky=W+E)
         sb.config(command=self.lbList.yview)
+        
         #create labelframe2
         self.lfRight = LabelFrame(master, text='Info')
         self.lfRight.grid(row=0, column=6, sticky=N+S, padx=5, pady=5, ipadx=5, ipady=5)
+        
         #create scrolltext info
         self.stInfo = ScrolledText(self.lfRight, width=35, height=10)
         self.stInfo.grid(row=0, columnspan=3, padx=5, sticky=W+E)
+        
         #create check server
         btIsAlive = Button(self.lfRight, text='Check Server', command=pingProcessor.ping)
         btIsAlive.grid(row=5, columnspan=1, padx=5, pady=5, sticky=W+E)
+        
         #create button GET
         self.btGet = Button(self.lfRight, text='GET', command=self.getInfoObj)
         self.btGet.grid(row=1, column=1, columnspan=3, padx=5, pady=5, sticky=W+E)
         self.btGet.config(state=DISABLED)
+        
         #create button on
         btOn = Button(self.lfRight, text='ON', command=self.setStateOn)
         btOn.grid(row=2, columnspan=3, padx=5, pady=5, sticky=W+E)
+        
         #create button off
         btOff = Button(self.lfRight, text='OFF', command=self.setStateOff)
         btOff.grid(row=3, columnspan=3, padx=5, pady=5, sticky=W+E)
+        
         #create button check
         btCheck = Button(self.lfRight, text='CHECK', command=self.setStateCheck)
         btCheck.grid(row=4, columnspan=3, padx=5, pady=5, sticky=W+E)
+        
         #create button task
         btTask = Button(self.lfRight, text='Task', command=self.openSubApp)
         btTask.grid(row=5, column=1, columnspan=2, padx=5, pady=5, sticky=W+E)
+        
         #create button on
         btExit = Button(self.lfRight, text='Exit', command=self.exit)
         btExit.grid(row=6, padx=5, pady=5, sticky=W)
