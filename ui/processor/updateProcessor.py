@@ -28,6 +28,7 @@ def update(name, state):
         elType = int(json['object']['elementType'])
         parId = int(json['object']['partitionId'])
         resp = 'Object: %s\nId: %d\nState: %s\nType: %d\nPartition id: %d' % (name, elId, elSt, elType, parId)
+        tkMessageBox.showinfo('', 'Objekt wurde geändert')
         defer.returnValue(resp)
     elif json['result'] == 'Not Modified':
         tkMessageBox.showinfo('', json['result'])
