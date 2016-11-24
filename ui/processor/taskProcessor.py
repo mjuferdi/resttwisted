@@ -25,8 +25,8 @@ def task(parId):
             tkMessageBox.showinfo('', 'Kein Respons-Objekt')
             defer.returnValue(None)
         elif json['result'] == 'Not Found':
-            resp = json['object']
-            defer.returnValue(resp)
+            tkMessageBox.showinfo('', json['object'])
+            defer.returnValue(None)
         elif json['result'] == 'OK':
             for item in json['object']:
                 elId = int(item['elementId'])
