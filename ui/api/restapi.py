@@ -15,6 +15,7 @@ from logging import getLogger
 from zope.interface import implements
 
 import json
+import tkMessageBox
 
 class RestAPI():
     """
@@ -115,8 +116,8 @@ class RestAPI():
                 defer.returnValue(None)  
         except DNSLookupError as err:
             self.logging.error('Error: %s' % err.message) 
+            tkMessageBox.showwarning(' ', err.message)
             defer.returnValue(None)
-
     @defer.inlineCallbacks
     def put(self, obj):
         """

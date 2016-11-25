@@ -63,7 +63,7 @@ class App(object):
         sb.grid(row=4, column=3, pady=5, sticky=N+S)
         
         #create listbox
-        self.lbList = Listbox(lfLeft, yscrollcommand=sb.set, height=20)
+        self.lbList = Listbox(lfLeft, selectmode='multiple', yscrollcommand=sb.set, height=20)
         self.lbList.grid(row=4, columnspan=3, padx=5, pady=5, sticky=W+E)
         sb.config(command=self.lbList.yview)
         
@@ -80,20 +80,24 @@ class App(object):
         btIsAlive.grid(row=5, columnspan=1, padx=5, pady=5, sticky=W+E)
         
         #create button GET
-        self.btGet = Button(self.lfRight, text='GET', command=self.getInfoObj)
-        self.btGet.grid(row=1, column=1, columnspan=3, padx=5, pady=5, sticky=W+E)
+        self.btGet = Button(self.lfRight, text='GET', command=lambda: self.registerCallback('getinfo', None))
+        self.btGet.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky=W+E)
         self.btGet.config(state=DISABLED)
         
+        #create button Clear
+        self.btClear = Button(self.lfRight, text='Clear', command=self.clearStInfo)
+        self.btClear.grid(row=1, column=2, padx=5, pady=5, sticky=W+E)
+        
         #create button on
-        btOn = Button(self.lfRight, text='ON', command=self.setStateOn)
+        btOn = Button(self.lfRight, text='ON', command=lambda: self.registerCallback('update', 'on'))
         btOn.grid(row=2, columnspan=3, padx=5, pady=5, sticky=W+E)
         
         #create button off
-        btOff = Button(self.lfRight, text='OFF', command=self.setStateOff)
+        btOff = Button(self.lfRight, text='OFF', command=lambda: self.registerCallback('update', 'off'))
         btOff.grid(row=3, columnspan=3, padx=5, pady=5, sticky=W+E)
         
         #create button check
-        btCheck = Button(self.lfRight, text='CHECK', command=self.setStateCheck)
+        btCheck = Button(self.lfRight, text='CHECK', command=lambda: self.registerCallback('update', 'check'))
         btCheck.grid(row=4, columnspan=3, padx=5, pady=5, sticky=W+E)
         
         #create button task
@@ -117,20 +121,23 @@ class App(object):
         _input = self.eSearch.get()
         if not _input:
             d = searchProcessor.getList()
-            d.addCallback(self.callback)
+            d.addCallback(self.setNewList)
         elif _input in self.listname:
             self.lbList.insert(END,_input)
         elif _input not in self.listname:
             tkMessageBox.showinfo('', 'No name for "%s"' % _input)
              
-    def callback(self, resp):
+    def setNewList(self, resp):
         """
         Set global variable resp
         Create new list contains only name
         @param resp: respons-object 
         """
         self.resp = resp
-        self.listname = map(lambda d: d['name'], self.resp)
+        if resp is None:
+            return resp
+        else:
+            self.listname = map(lambda d: d['name'], self.resp)
         self.displayListObj(self.resp)
         
     def displayListObj(self, resp):
@@ -148,21 +155,21 @@ class App(object):
                 for item in resp:
                     self.lbList.insert(END, item['name'])
             elif value == 'Flexzone':
-                self.sortList(0, 'flexzoneid', 9, 'Flexzone id ')
+                self.sortList(int(0), 'flexzoneid', 9, 'Flexzone id ')
             elif value == 'Element type':
-                self.sortList(1, 'elementtype', 3, 'Element type ')
+                self.sortList(int(1), 'elementtype', 3, 'Element type ')
         except:
             return None
     
-    def sortList(self, num, key, ran, text):
+    def sortList(self, par, key, ran, text):
         """
-        Option sort list
+        Sort list
         @param num: int parameter
         @param key: key in list of dict
         @param ran: range for do looping
         @param text: output text   
         """
-        i = num
+        i = par
         newlist = sorted(self.resp, key=lambda k: k[key])
         for x in range(ran):
             myarr = []
@@ -173,16 +180,25 @@ class App(object):
             for d in myarr:
                 self.lbList.insert(END, d)
             self.lbList.insert(END, ' ')
-            i += 1 
-
-    def getInfoObj(self):
+            i += 1
+    
+    def registerCallback(self, func, state=None):
         """
-        Show detail info from clicked object
         Register a callback to function displayInfoObj
+        @param func: method request
+        @param state: new state to update
         """
-        _obj = str(self.lbList.get(ACTIVE))
-        d = getInfoProcessor.getInfo(_obj)
-        d.addCallback(self.displayInfoObj)
+        selectedObj = self.lbList.curselection()
+        objarr = []
+        for i in selectedObj:
+            _obj = str(self.lbList.get(i))
+            objarr.append(_obj)
+        if func == 'getinfo':
+            d = getInfoProcessor.getInfo(objarr)
+        elif func == 'update' and state is not None:
+            d = updateProcessor.update(objarr, state)
+        self.lbList.select_clear(0, END)
+        d.addCallback(self.displayInfoObj)  
       
     def displayInfoObj(self, resp):
         """
@@ -194,34 +210,16 @@ class App(object):
             return False
         else:
             self.stInfo.delete(1.0,END)
-            self.stInfo.insert(END,resp)
+            for i in resp:
+                self.stInfo.insert(END,i+'\n')
+            self.stInfo.config(state=DISABLED)
+        
+    def clearStInfo(self):
+        """Clear scroll text"""
+        self.stInfo.config(state=NORMAL)
+        self.stInfo.delete(1.0, END)
         self.stInfo.config(state=DISABLED)
-        
-    def setStateOn(self):
-        """Set value state on. Call function updateState"""
-        self.state['State'] = 'on'
-        self.updateState(self.state['State'])
-        
-    def setStateOff(self):
-        """Set value state off. Call function updateState"""
-        self.state['State'] = 'off'
-        self.updateState(self.state['State'])
-        
-    def setStateCheck(self):
-        """Set value state check. Call function updateState"""
-        self.state['State'] = 'check'
-        self.updateState(self.state['State'])
-        
-    def updateState(self, state):
-        """
-        Call function update from class Function() to send put request
-        Register callback for function  displayInfo
-        @param state: new state to update 
-        """
-        _obj = str(self.lbList.get(ACTIVE))
-        d = updateProcessor.update(_obj, state)
-        d.addCallback(self.displayInfoObj)
-        
+    
     def openSubApp(self):
         """Open sub window for task"""
         root = Tk()

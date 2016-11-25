@@ -107,7 +107,7 @@ class Detector():
             self.api.setUpdate()
             if self.state == stateUpdate:
                 self.logging.info('Not modified')
-                defer.returnValue(None)
+                defer.returnValue(d)
             else:
                 data= {'elementId': self.id,
                                'elementType': self.type,

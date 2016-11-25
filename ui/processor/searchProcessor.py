@@ -8,7 +8,6 @@ Created on 22.11.2016
 from twisted.internet import defer
 from twistedrest.ui.api import restapi
 import tkMessageBox
-  
 @defer.inlineCallbacks
 def getList():
     """
@@ -21,6 +20,7 @@ def getList():
     json = yield _api.get()
     if json is None:
         tkMessageBox.showwarning('', 'Keine Liste vorhanden')
+        defer.returnValue(None)
     else:
         for item in json['object']:
             resp.append(item)

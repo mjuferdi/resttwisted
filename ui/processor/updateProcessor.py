@@ -9,6 +9,7 @@ from twisted.internet import defer
 from twistedrest.ui.api import detector
 import tkMessageBox
 
+
 @defer.inlineCallbacks
 def update(name, state):
     """
@@ -18,18 +19,20 @@ def update(name, state):
     @return: resp  
     """
     det = detector.Detector()
-    json = yield det.dirUpdate(name, state)
-    if json is None:
-        tkMessageBox.showinfo('', 'Keine Updates mehr möglich')
-        defer.returnValue(None)
-    elif json['result'] == 'OK':
+    myarr = []
+    if len(name) == 0:
+        tkMessageBox.showinfo(' ', 'Bitte Objekt auswählen')
+    for i in name:
+        json = yield det.dirUpdate(i, state)
         elId = int(json['object']['elementId'])
         elSt = json['object']['elementState']
         elType = int(json['object']['elementType'])
         parId = int(json['object']['partitionId'])
-        resp = 'Object: %s\nId: %d\nState: %s\nType: %d\nPartition id: %d' % (name, elId, elSt, elType, parId)
-        tkMessageBox.showinfo('', 'Objekt wurde geändert')
-        defer.returnValue(resp)
-    elif json['result'] == 'Not Modified':
-        tkMessageBox.showinfo('', json['result'])
-        defer.returnValue(None)
+        resp = 'Object: %s\nId: %d\nState: %s\nType: %d\nPartition id: %d\n' % (i, elId, elSt, elType, parId)
+        if json is None:
+            myarr.append(resp)
+        elif json['result'] == 'OK':
+            myarr.append(resp)
+        elif json['result'] == 'Not Modified':
+            tkMessageBox.showinfo('', json['result'])
+    defer.returnValue(myarr)
