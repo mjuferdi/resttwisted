@@ -4,6 +4,12 @@
 Created on 26.09.2016
 
 @author: juferdi
+
+REST Client API
+
+This is a REST webservice design for HTTP client side to send a request 
+and get the response JSON object from Webserver. The Methods are GET and PUT available.
+The REST is developed with Twisted framework.
 """
 
 from twisted.internet import defer, reactor
@@ -19,7 +25,10 @@ import tkMessageBox
 
 class RestAPI():
     """
-    REST API
+    Basic REST API class 
+    
+    Implementation http method GET and PUT for RestService, manage the URL path 
+    and also produce a body for PUT method.
     """
     def __init__(self):
         """
@@ -44,14 +53,14 @@ class RestAPI():
     def setIsAliveId(self, parId):
         """
         Called on call service.
-        @param parId: partitionId.
+        @param parId (int): partitionId.
         """
         self.uri = 'isAlive/' + '%d' % parId
         
     def setTask(self, parId):
         """
         Called on task service.
-        @param parId: partitionId.
+        @param parId (int): partitionId.
         """
         self.uri = 'task/' + '%d' % parId
 
@@ -64,15 +73,15 @@ class RestAPI():
     def setSearchName(self, name):
         """
         Called on search service, 
-        @param name: objects name.
+        @param name (str): objects name.
         """
         self.uri = 'search/' + name
         
     def setStatus(self, _id, _typ):
         """
         Called on review service, 
-        @param _id: elementId object
-        @param _type: elementType object
+        @param _id (int): elementId object
+        @param _type (int): elementType object
         """
         self.uri = 'update/%d/%d' % (_id, _typ)
     
